@@ -5,24 +5,26 @@
   import SpecialEffects from './SpecialEffects.svelte';
   import SyntheSlalom from './SyntheSlalom.svelte';
   import BassSplit from './BassSplit.svelte';
-  import {
-    onMount
-  }
-  from 'svelte';
+  import { onMount } from 'svelte';
 
+  //svelte components
   let flutes;
   let perc;
   let bass;
   let slalom;
+  let fx;
 
+  //state of bass split;
   let bassSplit;
 
+  //maybe change play and stop note functions to for loops of synths
   function playNote(event) {
     if (bassSplit && event.detail.pitch < 48) {
       bass.playNote(event);
     } else {
       flutes.playNote(event);
       perc.playNote(event);
+      fx.playNote(event);
     }
   }
 
@@ -32,30 +34,104 @@
     } else {
       flutes.stopNote(event);
       perc.stopNote(event);
+      fx.stopNote(event);
     }
   }
 
+  //synths and signals to attach slolam to
+  let fxDetune;
+  let synths = [];
+
+  //chain the slalom signal to each synth
   let slalomSignal;
-  let flutesSynth;
-  let percSynth;
-  let bassSynth;
   $: {
-    if (typeof slalomSignal !== 'undefined')
-      slalomSignal.fan(flutesSynth.detune, percSynth.detune, bassSynth.detune);
+    if (typeof slalomSignal !== 'undefined') {
+      //connect slalom to first 5 synths
+      for (const synth in synths) {
+        if(synth !== "fxPiano" && synth !== "fxHarpsichord")
+          slalomSignal.connect(synths[synth].detune)
+      }
+      //connect slalom to the fx detune
+      slalomSignal.connect(fxDetune);
+    }
   };
 
+  //connect all synths to the output effects
+  let fxInput;
+  let percOutput;
+  onMount(async () => {
+    for (const synth in synths) {
+      if(synth !== "percussion")
+        synths[synth].connect(fxInput);
+    };
+    //percussion has a separate output
+    percOutput.connect(fxInput);
+	});
+
+  //function to stop all notes when appropriate
   function flushAll(event) {
-    flutesSynth.releaseAll();
-    percSynth.releaseAll();
-    bassSynth.releaseAll();
+    synths.forEach((synth) => {
+      synth.releaseAll(0.005);
+    });
   }
 
-  document.addEventListener("visibilitychange", function() {
-    if (document.visibilityState === 'hidden') {
-      flushAll();
-    }
-  });
+  //stop all notes when exiting tab
+  window.addEventListener("visibilitychange", flushAll);
 </script>
+
+<ion-app>
+  <midi-input on:noteon={playNote} on:noteoff={stopNote} on:firston={(slalom.startSlalom)} on:flush={flushAll}></midi-input>
+  <ion-content class="ion-justify-content-center ion-wrap" color="dark">
+    <div>
+      <FluteStops
+        bind:this={flutes}
+        bind:flutes={synths[2]}/>
+
+      <PercussionStops
+        bind:this={perc}
+        bind:percussion={synths["percussion"]}
+        bind:percOutput={percOutput}/>
+
+			<BassSplit
+        bind:this={bass}
+        bind:bassSplitState={bassSplit}
+        bind:bass={synths["bass"]}
+        bind:strings={synths["bassStrings"]}/>
+
+      <SpecialEffects
+        bind:this={fx}
+        bind:detune={fxDetune}
+        bind:piano={synths["fxPiano"]}
+        bind:harpsichord={synths["fxHarpsichord"]}
+        bind:vibrato={fxInput}/>
+
+			<SyntheSlalom
+        bind:this={slalom}
+        bind:slalomSignal={slalomSignal}/>
+
+    </div>
+  </ion-content>
+</ion-app>
+
+<button type="button" name="button" on:click={async ()=> { await Tone.start()}}>Start Audio</button>
+
+<style>
+  @media only screen and (min-width: 768px) {
+    div {
+      margin: 10px;
+      display: grid;
+      grid-gap: 10px;
+      grid-template-areas: 'flutes flutes' 'perc fx' 'bass slalom';
+    }
+  }
+
+  @media only screen and (min-width: 1200px) {
+    div {
+      grid-template-areas: 'flutes flutes perc' 'fx bass perc' 'fx bass slalom';
+      height: calc(100% - 20px);
+    }
+  }
+</style>
 
 <svelte:head>
   <script type="module" src="midi-input.js"></script>
@@ -173,39 +249,3 @@
     }
   </style>
 </svelte:head>
-
-
-
-
-<ion-app>
-  <midi-input on:noteon={playNote} on:noteoff={stopNote} on:firston={(slalom.startSlalom)} on:flush={flushAll}></midi-input>
-  <ion-content class="ion-justify-content-center ion-wrap" color="dark">
-    <div>
-      <FluteStops bind:this={flutes} bind:flutes={flutesSynth}/>
-      <PercussionStops bind:this={perc} bind:percussion={percSynth}/>
-			<BassSplit bind:this={bass} bind:bassSplitState={bassSplit} bind:bass={bassSynth}/>
-      <SpecialEffects />
-			<SyntheSlalom bind:this={slalom} bind:slalomSignal={slalomSignal}/>
-    </div>
-  </ion-content>
-</ion-app>
-
-<button type="button" name="button" on:click={async ()=> { await Tone.start()}}>Start Audio</button>
-
-<style>
-  @media only screen and (min-width: 768px) {
-    div {
-      margin: 10px;
-      display: grid;
-      grid-gap: 10px;
-      grid-template-areas: 'flutes flutes' 'perc fx' 'bass slalom';
-    }
-  }
-
-  @media only screen and (min-width: 1200px) {
-    div {
-      grid-template-areas: 'flutes flutes perc' 'fx bass perc' 'fx bass slalom';
-      height: calc(100% - 20px);
-    }
-  }
-</style>

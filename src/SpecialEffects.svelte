@@ -1,12 +1,134 @@
 <script>
   import Tone from 'tone';
 
-  let chorusState;
+  /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Scale detune from cents to 0.5 to to 2
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+  export let detune = new Tone.Signal(0, Tone.Type.Cents);
 
-  let reverb;
-  $: reverbState = (reverb === "off") ? true : false;
+  let normalizeUpper = new Tone.Normalize(0, 2400);
+  let scaleUpper = new Tone.Scale(0, 1);
+  normalizeUpper.connect(scaleUpper);
 
-  //export let piano = new Tone.PolySynth(6, Tone.Sampler).toMaster();
+  let normalizeLower = new Tone.Normalize(-2400, 0);
+  let scaleLower = new Tone.Scale(0.5, 1);
+  normalizeLower.connect(scaleLower);
+
+  let add = new Tone.Add();
+
+  detune.fan(normalizeUpper, normalizeLower);
+
+  scaleUpper.connect(add, 0, 0);
+  scaleLower.connect(add, 0, 1);
+
+  //overwrite Tone.Sampler's triggerAttack
+  Tone.Sampler.prototype.triggerAttack = function(notes, time, velocity) {
+    this.log("triggerAttack", notes, time, velocity);
+    if (!Array.isArray(notes)) {
+      notes = [notes];
+    }
+    for (var i = 0; i < notes.length; i++) {
+      var midi = Tone.Frequency(notes[i]).toMidi();
+      // find the closest note pitch
+      var difference = this._findClosest(midi);
+      var closestNote = midi - difference;
+      var buffer = this._buffers.get(closestNote);
+      var playbackRate = Tone.intervalToFrequencyRatio(difference);
+      // play that note
+      var source = new Tone.BufferSource({
+        "buffer": buffer,
+        "playbackRate": playbackRate,
+        "fadeIn": this.attack,
+        "fadeOut": this.release,
+        "curve": this.curve,
+      }).connect(this.output);
+      var detune = new Tone.Multiply(playbackRate).connect(source.playbackRate);
+      add.connect(detune);
+      source.start(time, 0, buffer.duration / playbackRate, velocity);
+      // add it to the active sources
+      if (!Tone.isArray(this._activeSources[midi])) {
+        this._activeSources[midi] = [];
+      }
+      this._activeSources[midi].push(source);
+
+      //remove it when it's done
+      source.onended = function() {
+        if (this._activeSources && this._activeSources[midi]) {
+          var index = this._activeSources[midi].indexOf(source);
+          if (index !== -1) {
+            this._activeSources[midi].splice(index, 1);
+            detune.dispose();
+          }
+        }
+      }.bind(this);
+    }
+    return this;
+  };
+
+  export let piano = new Tone.Sampler({
+    "C1": "../piano/C0-poff.wav",
+    "C3": "../piano/C2-poff.wav",
+    "C4": "../piano/C3-poff.wav",
+    "C5": "../piano/C4-poff.wav",
+    "C6": "../piano/C5-poff.wav",
+  });
+
+  export let harpsichord = new Tone.Sampler({
+    "B1": "../harpsichord/13-C1.wav",
+    "B2": "../harpsichord/25-C2.wav",
+    "B3": "../harpsichord/37-C3.wav",
+    "B4": "../harpsichord/49-C4.wav",
+    "B5": "../harpsichord/61-C5.wav",
+  });
+
+  let pianoVolume = new Tone.Signal(0).chain(piano.volume);
+  let harpsichordVolume = new Tone.Signal(0).chain(harpsichord.volume);
+
+  export function playNote(event) {
+    let note = Tone.Midi(event.detail.pitch).toNote();
+    piano.triggerAttack(note);
+    harpsichord.triggerAttack(note);
+  }
+
+  export function stopNote(event) {
+    let note = Tone.Midi(event.detail.pitch).toNote();
+    piano.triggerRelease(note);
+    harpsichord.triggerRelease(note);
+  }
+
+
+  /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Vibrato
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+  export const vibrato = new Tone.Vibrato(5, 0.15);
+  let vibratoState;
+  $: {
+    vibrato.wet.rampTo(vibratoState ? 0.7 : 0);
+  }
+
+
+  /*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  Reverb
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
+  let reverb = new Tone.Convolver ( "../reverb/The Barn.wav").toMaster();
+  let currentBuffer = "The Barn";
+
+  let reverbValue = "The Barn";
+  $: reverbState = (reverbValue === "off") ? true : false;
+  $: {
+    if(reverbValue !== "off" && currentBuffer !== reverbValue) {
+      vibrato.disconnect().chain(reverb, Tone.Master);
+      reverb.load(`../reverb/${reverbValue}.wav`);
+      currentBuffer = reverbValue;
+    } else if (reverbValue === "off") {
+      vibrato.disconnect().toMaster();
+      reverb.disconnect();
+    } else {
+      vibrato.disconnect().chain(reverb, Tone.Master);
+    }
+  }
+
+  vibrato.chain(reverb);
 </script>
 
 <ion-card>
@@ -15,45 +137,55 @@
   </ion-card-header>
 
   <!--Main Control Section-->
-    <ion-item lines="none">
-      <ion-label position="stacked">Piano</ion-label>
-      <ion-range mode="ios"></ion-range>
-    </ion-item>
-    <ion-item>
-      <ion-label position="stacked">Harpsichord</ion-label>
-      <ion-range mode="ios"></ion-range>
-    </ion-item>
+  <ion-item lines="none">
+    <ion-label position="stacked">Piano</ion-label>
+    <ion-range mode="ios"
+      value={Math.floor(pianoVolume.value * 100)}
+      on:ionChange={e => pianoVolume.rampTo(e.target.value / 100, 0.1)}
+    ></ion-range>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Harpsichord</ion-label>
+    <ion-range mode="ios"
+      value={Math.floor(harpsichordVolume.value * 900)}
+      on:ionChange={e => harpsichordVolume.rampTo(e.target.value / 900, 0.1)}
+    ></ion-range>
+  </ion-item>
 
-    <!--Chorus Section-->
-    <ion-item lines="none">
-      <ion-label slot="start">Chorus</ion-label>
-      <ion-toggle slot="end" mode="md"
-        on:ionChange={e => chorusState = e.target.checked}></ion-toggle>
-    </ion-item>
-    <ion-item>
-      <ion-label position="stacked">Rate</ion-label>
-      <ion-range min="10" max="1000" pin mode="ios"
-       disabled={!chorusState}>
-      </ion-range>
-    </ion-item>
+  <!--Chorus Section-->
+  <ion-item lines="none">
+    <ion-label slot="start">Vibrato</ion-label>
+    <ion-toggle slot="end" mode="md"
+      checked={vibratoState}
+      on:ionChange={e=> vibratoState = e.target.checked}></ion-toggle>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Rate</ion-label>
+    <ion-range min="1" max="8" pin mode="ios"
+      disabled={!vibratoState}
+      value={vibrato.frequency.value}
+      on:ionChange={e => vibrato.frequency.rampTo(e.target.value)}>
+    </ion-range>
+  </ion-item>
 
-    <!--Reverb Section-->
-    <ion-item lines="none">
-      <ion-label>Reverb</ion-label>
-      <ion-select value="barn" interface="popover"
-        on:ionChange={e => reverb = e.target.value}>
-        <ion-select-option value="off">Off</ion-select-option>
-        <ion-select-option value="barn">The Barn</ion-select-option>
-        <ion-select-option value="cathedral">Cathedral</ion-select-option>
-        <ion-select-option value="spring">Spring</ion-select-option>
-        <ion-select-option value="plate">Plate</ion-select-option>
-      </ion-select>
-    </ion-item>
-    <ion-item lines="none">
-      <ion-label position="stacked">Dry/Wet</ion-label>
-      <ion-range mode="ios" disabled={reverbState}>
-      </ion-range>
-    </ion-item>
+  <!--Reverb Section-->
+  <ion-item lines="none">
+    <ion-label>Reverb</ion-label>
+    <ion-select value={currentBuffer} interface="popover" on:ionChange={e=> reverbValue = e.target.value}>
+      <ion-select-option value="off">Off</ion-select-option>
+      <ion-select-option value="The Barn">The Barn</ion-select-option>
+      <ion-select-option value="Cathedral (Large)">Cathedral (Large)</ion-select-option>
+      <ion-select-option value="Cathedral (Small)">Cathedral (Small)</ion-select-option>
+      <ion-select-option value="Spring">Spring</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <ion-item lines="none">
+    <ion-label position="stacked">Dry/Wet</ion-label>
+    <ion-range mode="ios" disabled={reverbState}
+      value={Math.floor(reverb.wet.value * 100)}
+      on:ionChange={e => reverb.wet.rampTo(e.target.value / 100)}>
+    </ion-range>
+  </ion-item>
 
 </ion-card>
 

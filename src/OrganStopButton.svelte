@@ -11,16 +11,11 @@
 	$: color = (stopType === "flute") ? "primary" : "secondary";
 </script>
 
-
-
-
 <label style="background-position: {x}% {y}% !important;
 							background-color: var(--ion-color-{color});" for={id} class:active>
 		<p>{name}</p>
 </label>
 <input type="checkbox" id={id} bind:checked={active}>
-
-
 
 <style>
 	p {

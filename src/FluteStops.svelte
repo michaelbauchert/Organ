@@ -12,7 +12,7 @@
       sustain: 1,
       release: 0.005
     }
-  }).toMaster();
+  });
 
   let fluteStops = [{name: '16', active: true},
                     {name: '8', active: false},
@@ -63,7 +63,8 @@
 
   <ion-item lines="none">
     <ion-label position="stacked">Volume</ion-label>
-    <ion-range min="0" max="100" pin mode="ios"
+    <ion-range pin mode="ios"
+      value={Math.floor(volumeSignal.value * 1000)}
       on:ionChange={e => volumeSignal.rampTo(e.target.value /1000, 0.1)}
     ></ion-range>
   </ion-item>

@@ -8,9 +8,9 @@
     },
     envelope : {
       attack: 0.005,
-      decay: 0.1,
-      sustain: 0,
-      release: 0
+      decay: 0,
+      sustain: 1,
+      release: 0.005
     }
   });
 
@@ -33,57 +33,64 @@
   let volumeSignal = new Tone.Signal(0).chain(percussion.volume);
 
   //reapeat dsp
-  let gain = new Tone.Gain().toMaster();
+  export let percOutput = new Tone.Gain(1);
   let scale = new Tone.ScaleExp();
-  let lfo = new Tone.LFO(3, 1, 0).chain(scale, gain.gain);
+  let lfo = new Tone.LFO(3, 1, 0).stop().connect(scale);
   lfo.type = "sawtooth80";
-  percussion.connect(gain);
+  percussion.connect(percOutput);
 
   //Toggle Repeat
   let repeat = false;
-  $: {
-    percussion.releaseAll();
+  $: if (repeat) {
+    lfo.connect(percOutput.gain).start(0)
+    percOutput.gain.rampTo(1);
+    percussion.set( {
+      "oscillator" : {
+        "decay" : 0,
+        "sustain" : 1,
+        "release" : 0.005
+      }
+    });
+  } else {//reset the envelope decay
+    lfo.disconnect().stop(0);
+    percussion.set( {
+      "oscillator" : {
+        "decay" : envelopeDecay / 1000,
+        "sustain" : 0,
+        "release" : 0
+      }
+    });
+  }//end if else
 
-    if (repeat) {
-      lfo.start();
-      percussion.set({
-        "envelope" : {
-          "decay" : 0,
-          "sustain": 1,
-          "release": 0.005
-        }
-      });
-    } else {
-      lfo.stop();
-      gain.gain.value = 1;
-      percussion.set({
-        "envelope" : {
-          "sustain" : 0,
-          "release" : 0
-        }
-      });
-    }//end if else
-  }
-
-  function setDecay(event) {
+  function setExponentDecay(event) {
     let value = event.target.value;
 
-    if (!repeat)
-      percussion.set({
-        "envelope" : {
-          "decay" : value / 1000
-      }});
+    if (value < -9) {
+      scale.exponent = Math.abs(value + 9);
+    } else {
+      scale.exponent = Math.abs(value / 10);
+    }
+  }//end setExponentDecay
 
-    scale.exponent = ((value - 50) / 250 * 7.25 + 0.75);
-  }
+  let envelopeDecay = 10;
+  function setEnvelopeDecay(event) {
+    envelopeDecay = event.target.value;
+    percussion.set( {
+      "oscillator" : {
+        "decay" : envelopeDecay / 100
+      }
+    });
+  }//end setEnvelopeDecay
 
   export function playNote(event) {
+    console.log("perc attack");
     let note = Tone.Midi(event.detail.pitch).toNote();
     percussion.triggerAttack(note);
-    lfo.restart();
+    //Tone.Transport.start(0);
   }
 
   export function stopNote(event) {
+    console.log("perc release");
     let note = Tone.Midi(event.detail.pitch).toNote();
     percussion.triggerRelease(note);
   }
@@ -104,31 +111,45 @@
     <ion-item lines="none">
       <ion-label position="stacked">Volume</ion-label>
       <ion-range min="0" max="100" pin mode="ios"
+        value={Math.floor(volumeSignal.value * 1000)}
         on:ionChange={e =>  volumeSignal.rampTo(e.target.value / 1000)}></ion-range>
     </ion-item>
 
     <!--Decay Slider-->
     <ion-item>
       <ion-label position="stacked">Decay</ion-label>
-      <ion-range
-        mode="ios"
-        min="50"
-        max="300"
-        on:ionChange={setDecay}></ion-range>
+      {#if repeat}
+        <ion-range
+          mode="ios"
+          min="-15"
+          max="-5"
+          value={Math.floor((envelopeDecay - 5) / 295 * 10) - 15}
+          on:ionChange={setExponentDecay}></ion-range>
+      {:else}
+        <ion-range
+          mode="ios"
+          min="5"
+          max="300"
+          value={envelopeDecay}
+          on:ionChange={setEnvelopeDecay}></ion-range>
+      {/if}
     </ion-item>
 
     <!--Repeat Section-->
     <ion-item lines="none">
       <ion-label>Note Repeat</ion-label>
-      <ion-toggle slot="end" mode="md" on:ionChange={e => repeat = e.target.checked}></ion-toggle>
+      <ion-toggle slot="end" mode="md"
+        value={repeat}
+        on:ionChange={e => repeat = e.target.checked}></ion-toggle>
     </ion-item>
     <ion-item lines="none">
       <ion-label position="stacked">Rate</ion-label>
       <ion-range
         mode="ios"
-        min="200" max="1500" step="25"
+        min="2" max="15"
         disabled={!repeat}
-        on:ionChange={ e => lfo.frequency.rampTo(e.target.value / 100) }>
+        value={lfo.frequency.value}
+        on:ionChange={ e => lfo.frequency.rampTo(e.target.value) }>
       </ion-range>
     </ion-item>
 

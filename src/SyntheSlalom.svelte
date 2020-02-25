@@ -23,7 +23,9 @@
 
   <ion-item lines="none">
     <ion-label position="stacked">Range</ion-label>
-    <ion-range min="0" max="24" pin mode="ios"
+    <ion-range min="0" max="24" mode="ios"
+      snaps
+      value={range / 100}
       on:ionChange={e => range = e.target.value * 100}>
     </ion-range>
   </ion-item>
@@ -31,13 +33,15 @@
   <ion-item>
     <ion-label position="stacked">Timer</ion-label>
     <ion-range min="0" max="5000" pin mode="ios"
+      value={Math.floor(timer * 1000)}
       on:ionChange={e => timer = e.target.value / 1000}>
     </ion-range>
   </ion-item>
 
   <ion-item lines="none">
     <ion-label>Direction</ion-label>
-    <ion-select value="up" interface="popover"
+    <ion-select interface="popover"
+      value={(direction === -1) ? "up" : "down"}
       on:ionChange={e => direction = (e.target.value === "up") ? -1 : 1}>
       <ion-select-option value="up">Up</ion-select-option>
       <ion-select-option value="down">Down</ion-select-option>

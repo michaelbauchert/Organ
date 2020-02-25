@@ -111,7 +111,6 @@ class MidiInput extends HTMLElement {
                       heldNotes: heldNotes
                     }
           }));
-					console.log('note-off');
         }
 
 				//trigger LAST OFF event if the last note was let off

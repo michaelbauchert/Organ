@@ -422,17 +422,17 @@ var app = (function () {
     			t0 = text(/*name*/ ctx[1]);
     			t1 = space();
     			input = element("input");
-    			attr_dev(p, "class", "svelte-h8czp");
+    			attr_dev(p, "class", "svelte-14xxc1x");
     			add_location(p, file, 15, 2, 371);
     			set_style(label, "background-position", /*x*/ ctx[4] + "% " + /*y*/ ctx[5] + "%", 1);
     			set_style(label, "background-color", "var(--ion-color-" + /*color*/ ctx[3] + ")");
     			attr_dev(label, "for", /*id*/ ctx[2]);
-    			attr_dev(label, "class", "svelte-h8czp");
+    			attr_dev(label, "class", "svelte-14xxc1x");
     			toggle_class(label, "active", /*active*/ ctx[0]);
     			add_location(label, file, 13, 0, 237);
     			attr_dev(input, "type", "checkbox");
     			attr_dev(input, "id", /*id*/ ctx[2]);
-    			attr_dev(input, "class", "svelte-h8czp");
+    			attr_dev(input, "class", "svelte-14xxc1x");
     			add_location(input, file, 17, 0, 394);
     		},
     		l: function claim(nodes) {
@@ -610,7 +610,7 @@ var app = (function () {
     	return child_ctx;
     }
 
-    // (105:4) {#each percussionStops as stop}
+    // (121:4) {#each percussionStops as stop}
     function create_each_block(ctx) {
     	let updating_active;
     	let current;
@@ -674,88 +674,7 @@ var app = (function () {
     		block,
     		id: create_each_block.name,
     		type: "each",
-    		source: "(105:4) {#each percussionStops as stop}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (128:6) {:else}
-    function create_else_block(ctx) {
-    	let ion_range;
-    	let dispose;
-
-    	const block = {
-    		c: function create() {
-    			ion_range = element("ion-range");
-    			set_custom_element_data(ion_range, "mode", "ios");
-    			set_custom_element_data(ion_range, "min", "5");
-    			set_custom_element_data(ion_range, "max", "300");
-    			set_custom_element_data(ion_range, "value", /*envelopeDecay*/ ctx[3]);
-    			add_location(ion_range, file$1, 128, 8, 3528);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, ion_range, anchor);
-    			dispose = listen_dev(ion_range, "ionChange", /*setEnvelopeDecay*/ ctx[6], false, false, false);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty & /*envelopeDecay*/ 8) {
-    				set_custom_element_data(ion_range, "value", /*envelopeDecay*/ ctx[3]);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(ion_range);
-    			dispose();
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_else_block.name,
-    		type: "else",
-    		source: "(128:6) {:else}",
-    		ctx
-    	});
-
-    	return block;
-    }
-
-    // (121:6) {#if repeat}
-    function create_if_block(ctx) {
-    	let ion_range;
-    	let ion_range_value_value;
-    	let dispose;
-
-    	const block = {
-    		c: function create() {
-    			ion_range = element("ion-range");
-    			set_custom_element_data(ion_range, "mode", "ios");
-    			set_custom_element_data(ion_range, "min", "-15");
-    			set_custom_element_data(ion_range, "max", "-5");
-    			set_custom_element_data(ion_range, "value", ion_range_value_value = Math.floor((/*envelopeDecay*/ ctx[3] - 5) / 295 * 10) - 15);
-    			add_location(ion_range, file$1, 121, 8, 3307);
-    		},
-    		m: function mount(target, anchor) {
-    			insert_dev(target, ion_range, anchor);
-    			dispose = listen_dev(ion_range, "ionChange", /*setExponentDecay*/ ctx[5], false, false, false);
-    		},
-    		p: function update(ctx, dirty) {
-    			if (dirty & /*envelopeDecay*/ 8 && ion_range_value_value !== (ion_range_value_value = Math.floor((/*envelopeDecay*/ ctx[3] - 5) / 295 * 10) - 15)) {
-    				set_custom_element_data(ion_range, "value", ion_range_value_value);
-    			}
-    		},
-    		d: function destroy(detaching) {
-    			if (detaching) detach_dev(ion_range);
-    			dispose();
-    		}
-    	};
-
-    	dispatch_dev("SvelteRegisterBlock", {
-    		block,
-    		id: create_if_block.name,
-    		type: "if",
-    		source: "(121:6) {#if repeat}",
+    		source: "(121:4) {#each percussionStops as stop}",
     		ctx
     	});
 
@@ -778,6 +697,7 @@ var app = (function () {
     	let ion_item1;
     	let ion_label1;
     	let t7;
+    	let ion_range1;
     	let t8;
     	let ion_item2;
     	let ion_label2;
@@ -787,9 +707,9 @@ var app = (function () {
     	let ion_item3;
     	let ion_label3;
     	let t13;
-    	let ion_range1;
-    	let ion_range1_disabled_value;
-    	let ion_range1_value_value;
+    	let ion_range2;
+    	let ion_range2_disabled_value;
+    	let ion_range2_value_value;
     	let current;
     	let dispose;
     	let each_value = /*percussionStops*/ ctx[0];
@@ -802,14 +722,6 @@ var app = (function () {
     	const out = i => transition_out(each_blocks[i], 1, 1, () => {
     		each_blocks[i] = null;
     	});
-
-    	function select_block_type(ctx, dirty) {
-    		if (/*repeat*/ ctx[2]) return create_if_block;
-    		return create_else_block;
-    	}
-
-    	let current_block_type = select_block_type(ctx);
-    	let if_block = current_block_type(ctx);
 
     	const block = {
     		c: function create() {
@@ -835,7 +747,7 @@ var app = (function () {
     			ion_label1 = element("ion-label");
     			ion_label1.textContent = "Decay";
     			t7 = space();
-    			if_block.c();
+    			ion_range1 = element("ion-range");
     			t8 = space();
     			ion_item2 = element("ion-item");
     			ion_label2 = element("ion-label");
@@ -847,43 +759,45 @@ var app = (function () {
     			ion_label3 = element("ion-label");
     			ion_label3.textContent = "Rate";
     			t13 = space();
-    			ion_range1 = element("ion-range");
-    			add_location(ion_card_title, file$1, 100, 4, 2601);
-    			add_location(ion_card_header, file$1, 99, 2, 2578);
+    			ion_range2 = element("ion-range");
+    			add_location(ion_card_title, file$1, 116, 4, 2781);
+    			add_location(ion_card_header, file$1, 115, 2, 2758);
     			set_custom_element_data(ion_card_content, "class", "svelte-j8q9zs");
-    			add_location(ion_card_content, file$1, 103, 2, 2672);
+    			add_location(ion_card_content, file$1, 119, 2, 2852);
     			set_custom_element_data(ion_label0, "position", "stacked");
-    			add_location(ion_label0, file$1, 111, 6, 2922);
+    			add_location(ion_label0, file$1, 127, 6, 3102);
     			set_custom_element_data(ion_range0, "min", "0");
     			set_custom_element_data(ion_range0, "max", "100");
     			set_custom_element_data(ion_range0, "pin", "");
     			set_custom_element_data(ion_range0, "mode", "ios");
     			set_custom_element_data(ion_range0, "value", ion_range0_value_value = Math.floor(/*volumeSignal*/ ctx[4].value * 1000));
-    			add_location(ion_range0, file$1, 112, 6, 2978);
+    			add_location(ion_range0, file$1, 128, 6, 3158);
     			set_custom_element_data(ion_item0, "lines", "none");
-    			add_location(ion_item0, file$1, 110, 4, 2891);
+    			add_location(ion_item0, file$1, 126, 4, 3071);
     			set_custom_element_data(ion_label1, "position", "stacked");
-    			add_location(ion_label1, file$1, 119, 6, 3230);
-    			add_location(ion_item1, file$1, 118, 4, 3212);
-    			add_location(ion_label2, file$1, 139, 6, 3785);
+    			add_location(ion_label1, file$1, 135, 6, 3410);
+    			set_custom_element_data(ion_range1, "mode", "ios");
+    			add_location(ion_range1, file$1, 136, 8, 3467);
+    			add_location(ion_item1, file$1, 134, 4, 3392);
+    			add_location(ion_label2, file$1, 144, 6, 3664);
     			set_custom_element_data(ion_toggle, "slot", "end");
     			set_custom_element_data(ion_toggle, "mode", "md");
-    			set_custom_element_data(ion_toggle, "value", /*repeat*/ ctx[2]);
-    			add_location(ion_toggle, file$1, 140, 6, 3827);
+    			set_custom_element_data(ion_toggle, "value", /*repeat*/ ctx[3]);
+    			add_location(ion_toggle, file$1, 145, 6, 3706);
     			set_custom_element_data(ion_item2, "lines", "none");
-    			add_location(ion_item2, file$1, 138, 4, 3754);
+    			add_location(ion_item2, file$1, 143, 4, 3633);
     			set_custom_element_data(ion_label3, "position", "stacked");
-    			add_location(ion_label3, file$1, 145, 6, 4006);
-    			set_custom_element_data(ion_range1, "mode", "ios");
-    			set_custom_element_data(ion_range1, "min", "2");
-    			set_custom_element_data(ion_range1, "max", "15");
-    			set_custom_element_data(ion_range1, "disabled", ion_range1_disabled_value = !/*repeat*/ ctx[2]);
-    			set_custom_element_data(ion_range1, "value", ion_range1_value_value = /*lfo*/ ctx[1].frequency.value);
-    			add_location(ion_range1, file$1, 146, 6, 4060);
+    			add_location(ion_label3, file$1, 150, 6, 3867);
+    			set_custom_element_data(ion_range2, "mode", "ios");
+    			set_custom_element_data(ion_range2, "min", "2");
+    			set_custom_element_data(ion_range2, "max", "15");
+    			set_custom_element_data(ion_range2, "disabled", ion_range2_disabled_value = !/*repeat*/ ctx[3]);
+    			set_custom_element_data(ion_range2, "value", ion_range2_value_value = /*lfo*/ ctx[1].frequency.value);
+    			add_location(ion_range2, file$1, 151, 6, 3921);
     			set_custom_element_data(ion_item3, "lines", "none");
-    			add_location(ion_item3, file$1, 144, 4, 3975);
+    			add_location(ion_item3, file$1, 149, 4, 3836);
     			set_custom_element_data(ion_card, "class", "svelte-j8q9zs");
-    			add_location(ion_card, file$1, 98, 0, 2564);
+    			add_location(ion_card, file$1, 114, 0, 2744);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -908,7 +822,8 @@ var app = (function () {
     			append_dev(ion_card, ion_item1);
     			append_dev(ion_item1, ion_label1);
     			append_dev(ion_item1, t7);
-    			if_block.m(ion_item1, null);
+    			append_dev(ion_item1, ion_range1);
+    			/*ion_range1_binding*/ ctx[14](ion_range1);
     			append_dev(ion_card, t8);
     			append_dev(ion_card, ion_item2);
     			append_dev(ion_item2, ion_label2);
@@ -918,13 +833,14 @@ var app = (function () {
     			append_dev(ion_card, ion_item3);
     			append_dev(ion_item3, ion_label3);
     			append_dev(ion_item3, t13);
-    			append_dev(ion_item3, ion_range1);
+    			append_dev(ion_item3, ion_range2);
     			current = true;
 
     			dispose = [
     				listen_dev(ion_range0, "ionChange", /*ionChange_handler*/ ctx[13], false, false, false),
-    				listen_dev(ion_toggle, "ionChange", /*ionChange_handler_1*/ ctx[14], false, false, false),
-    				listen_dev(ion_range1, "ionChange", /*ionChange_handler_2*/ ctx[15], false, false, false)
+    				listen_dev(ion_range1, "ionChange", /*setDecay*/ ctx[6], false, false, false),
+    				listen_dev(ion_toggle, "ionChange", /*toggleRepeat*/ ctx[5], false, false, false),
+    				listen_dev(ion_range2, "ionChange", /*ionChange_handler_1*/ ctx[15], false, false, false)
     			];
     		},
     		p: function update(ctx, [dirty]) {
@@ -955,28 +871,16 @@ var app = (function () {
     				check_outros();
     			}
 
-    			if (current_block_type === (current_block_type = select_block_type(ctx)) && if_block) {
-    				if_block.p(ctx, dirty);
-    			} else {
-    				if_block.d(1);
-    				if_block = current_block_type(ctx);
-
-    				if (if_block) {
-    					if_block.c();
-    					if_block.m(ion_item1, null);
-    				}
+    			if (!current || dirty & /*repeat*/ 8) {
+    				set_custom_element_data(ion_toggle, "value", /*repeat*/ ctx[3]);
     			}
 
-    			if (!current || dirty & /*repeat*/ 4) {
-    				set_custom_element_data(ion_toggle, "value", /*repeat*/ ctx[2]);
+    			if (!current || dirty & /*repeat*/ 8 && ion_range2_disabled_value !== (ion_range2_disabled_value = !/*repeat*/ ctx[3])) {
+    				set_custom_element_data(ion_range2, "disabled", ion_range2_disabled_value);
     			}
 
-    			if (!current || dirty & /*repeat*/ 4 && ion_range1_disabled_value !== (ion_range1_disabled_value = !/*repeat*/ ctx[2])) {
-    				set_custom_element_data(ion_range1, "disabled", ion_range1_disabled_value);
-    			}
-
-    			if (!current || dirty & /*lfo*/ 2 && ion_range1_value_value !== (ion_range1_value_value = /*lfo*/ ctx[1].frequency.value)) {
-    				set_custom_element_data(ion_range1, "value", ion_range1_value_value);
+    			if (!current || dirty & /*lfo*/ 2 && ion_range2_value_value !== (ion_range2_value_value = /*lfo*/ ctx[1].frequency.value)) {
+    				set_custom_element_data(ion_range2, "value", ion_range2_value_value);
     			}
     		},
     		i: function intro(local) {
@@ -1000,7 +904,7 @@ var app = (function () {
     		d: function destroy(detaching) {
     			if (detaching) detach_dev(ion_card);
     			destroy_each(each_blocks, detaching);
-    			if_block.d();
+    			/*ion_range1_binding*/ ctx[14](null);
     			run_all(dispose);
     		}
     	};
@@ -1023,8 +927,8 @@ var app = (function () {
     			oscillator: { type: "sine" },
     			envelope: {
     				attack: 0.005,
-    				decay: 0,
-    				sustain: 1,
+    				decay: 0.1,
+    				sustain: 0,
     				release: 0.005
     			}
     		}) } = $$props;
@@ -1036,46 +940,78 @@ var app = (function () {
     		{ name: "2", active: false }
     	];
 
-    	let volumeSignal = new Tone$1.Signal(0).chain(percussion.volume);
-    	let { percOutput = new Tone$1.Gain(1) } = $$props;
-    	let scale = new Tone$1.ScaleExp();
-    	let lfo = new Tone$1.LFO(3, 1, 0).stop().connect(scale);
+    	let volumeSignal = new Tone$1.Signal(0).connect(percussion.volume);
+    	let { percOutput = new Tone$1.Gain() } = $$props;
+    	let scale = new Tone$1.ScaleExp(0, 1, 10);
+    	let lfo = new Tone$1.LFO(3, 1, 0).connect(scale);
     	lfo.type = "sawtooth80";
     	percussion.connect(percOutput);
+    	let decayRange = [];
 
     	//Toggle Repeat
     	let repeat = false;
 
-    	function setExponentDecay(event) {
+    	function toggleRepeat(event) {
+    		$$invalidate(3, repeat = event.target.checked);
+    		percussion.releaseAll();
+
+    		if (repeat) {
+    			console.log("repeat");
+    			$$invalidate(2, decayRange.min = -15, decayRange);
+    			$$invalidate(2, decayRange.max = -1, decayRange);
+    			scale.connect(percOutput.gain);
+    			lfo.start(0);
+
+    			percussion.set({
+    				"envelope": {
+    					"decay": 0,
+    					"sustain": 1,
+    					"release": 0.005
+    				}
+    			});
+    		} else {
+    			//reset the envelope decay
+    			$$invalidate(2, decayRange.min = 3, decayRange);
+
+    			$$invalidate(2, decayRange.max = 75, decayRange);
+    			lfo.stop(0);
+    			scale.disconnect();
+    			percOutput.gain.rampTo(1);
+
+    			percussion.set({
+    				"envelope": { "decay": 0.1, "sustain": 0 }
+    			});
+    		} //end if else
+    	}
+
+    	function setDecay(event) {
     		let value = event.target.value;
 
-    		if (value < -9) {
-    			scale.exponent = Math.abs(value + 9);
+    		if (repeat) {
+    			scale.exponent = value * -1;
     		} else {
-    			scale.exponent = Math.abs(value / 10);
+    			percussion.set({ "envelope": { "decay": value / 100 } });
     		}
-    	} //end setExponentDecay
-
-    	let envelopeDecay = 10;
-
-    	function setEnvelopeDecay(event) {
-    		$$invalidate(3, envelopeDecay = event.target.value);
-
-    		percussion.set({
-    			"oscillator": { "decay": envelopeDecay / 100 }
-    		});
-    	} //end setEnvelopeDecay
+    	} //end setDecay
 
     	function playNote(event) {
     		console.log("perc attack");
     		let note = Tone$1.Midi(event.detail.pitch).toNote();
-    		percussion.triggerAttack(note);
-    	} //Tone.Transport.start(0);
+
+    		if (repeat) {
+    			percussion.triggerAttack(note);
+    		} else {
+    			percussion.triggerAttackRelease(note);
+    		}
+    	}
 
     	function stopNote(event) {
     		console.log("perc release");
     		let note = Tone$1.Midi(event.detail.pitch).toNote();
-    		percussion.triggerRelease(note);
+
+    		if (repeat) {
+    			percussion.triggerRelease(note);
+    		}
     	}
 
     	const writable_props = ["percussion", "percOutput"];
@@ -1090,8 +1026,14 @@ var app = (function () {
     	}
 
     	const ionChange_handler = e => volumeSignal.rampTo(e.target.value / 1000);
-    	const ionChange_handler_1 = e => $$invalidate(2, repeat = e.target.checked);
-    	const ionChange_handler_2 = e => lfo.frequency.rampTo(e.target.value);
+
+    	function ion_range1_binding($$value) {
+    		binding_callbacks[$$value ? "unshift" : "push"](() => {
+    			$$invalidate(2, decayRange = $$value);
+    		});
+    	}
+
+    	const ionChange_handler_1 = e => lfo.frequency.rampTo(e.target.value);
 
     	$$self.$set = $$props => {
     		if ("percussion" in $$props) $$invalidate(7, percussion = $$props.percussion);
@@ -1106,8 +1048,8 @@ var app = (function () {
     			percOutput,
     			scale,
     			lfo,
-    			repeat,
-    			envelopeDecay
+    			decayRange,
+    			repeat
     		};
     	};
 
@@ -1118,8 +1060,8 @@ var app = (function () {
     		if ("percOutput" in $$props) $$invalidate(8, percOutput = $$props.percOutput);
     		if ("scale" in $$props) scale = $$props.scale;
     		if ("lfo" in $$props) $$invalidate(1, lfo = $$props.lfo);
-    		if ("repeat" in $$props) $$invalidate(2, repeat = $$props.repeat);
-    		if ("envelopeDecay" in $$props) $$invalidate(3, envelopeDecay = $$props.envelopeDecay);
+    		if ("decayRange" in $$props) $$invalidate(2, decayRange = $$props.decayRange);
+    		if ("repeat" in $$props) $$invalidate(3, repeat = $$props.repeat);
     	};
 
     	$$self.$$.update = () => {
@@ -1137,42 +1079,16 @@ var app = (function () {
     				}
     			});
     		}
-
-    		if ($$self.$$.dirty & /*repeat, lfo, percOutput, percussion, envelopeDecay*/ 398) {
-    			 if (repeat) {
-    				lfo.connect(percOutput.gain).start(0);
-    				percOutput.gain.rampTo(1);
-
-    				percussion.set({
-    					"oscillator": {
-    						"decay": 0,
-    						"sustain": 1,
-    						"release": 0.005
-    					}
-    				});
-    			} else {
-    				//reset the envelope decay
-    				lfo.disconnect().stop(0);
-
-    				percussion.set({
-    					"oscillator": {
-    						"decay": envelopeDecay / 1000,
-    						"sustain": 0,
-    						"release": 0
-    					}
-    				});
-    			} //end if else
-    		}
     	};
 
     	return [
     		percussionStops,
     		lfo,
+    		decayRange,
     		repeat,
-    		envelopeDecay,
     		volumeSignal,
-    		setExponentDecay,
-    		setEnvelopeDecay,
+    		toggleRepeat,
+    		setDecay,
     		percussion,
     		percOutput,
     		playNote,
@@ -1180,8 +1096,8 @@ var app = (function () {
     		scale,
     		organstopbutton_active_binding,
     		ionChange_handler,
-    		ionChange_handler_1,
-    		ionChange_handler_2
+    		ion_range1_binding,
+    		ionChange_handler_1
     	];
     }
 
@@ -1704,65 +1620,65 @@ var app = (function () {
     			ion_label5.textContent = "Dry/Wet";
     			t27 = space();
     			ion_range3 = element("ion-range");
-    			add_location(ion_card_title, file$3, 135, 4, 4360);
-    			add_location(ion_card_header, file$3, 134, 2, 4337);
+    			add_location(ion_card_title, file$3, 135, 4, 4355);
+    			add_location(ion_card_header, file$3, 134, 2, 4332);
     			set_custom_element_data(ion_label0, "position", "stacked");
-    			add_location(ion_label0, file$3, 140, 4, 4496);
+    			add_location(ion_label0, file$3, 140, 4, 4491);
     			set_custom_element_data(ion_range0, "mode", "ios");
-    			set_custom_element_data(ion_range0, "value", ion_range0_value_value = Math.floor(/*pianoVolume*/ ctx[5].value * 100));
-    			add_location(ion_range0, file$3, 141, 4, 4549);
+    			set_custom_element_data(ion_range0, "value", ion_range0_value_value = Math.floor(/*pianoVolume*/ ctx[4].value * 100));
+    			add_location(ion_range0, file$3, 141, 4, 4544);
     			set_custom_element_data(ion_item0, "lines", "none");
-    			add_location(ion_item0, file$3, 139, 2, 4467);
+    			add_location(ion_item0, file$3, 139, 2, 4462);
     			set_custom_element_data(ion_label1, "position", "stacked");
-    			add_location(ion_label1, file$3, 147, 4, 4748);
+    			add_location(ion_label1, file$3, 147, 4, 4743);
     			set_custom_element_data(ion_range1, "mode", "ios");
-    			set_custom_element_data(ion_range1, "value", ion_range1_value_value = Math.floor(/*harpsichordVolume*/ ctx[6].value * 900));
-    			add_location(ion_range1, file$3, 148, 4, 4807);
-    			add_location(ion_item1, file$3, 146, 2, 4732);
+    			set_custom_element_data(ion_range1, "value", ion_range1_value_value = Math.floor(/*harpsichordVolume*/ ctx[5].value * 900));
+    			add_location(ion_range1, file$3, 148, 4, 4802);
+    			add_location(ion_item1, file$3, 146, 2, 4727);
     			set_custom_element_data(ion_label2, "slot", "start");
-    			add_location(ion_label2, file$3, 156, 4, 5058);
+    			add_location(ion_label2, file$3, 156, 4, 5053);
     			set_custom_element_data(ion_toggle, "slot", "end");
     			set_custom_element_data(ion_toggle, "mode", "md");
     			set_custom_element_data(ion_toggle, "checked", /*vibratoState*/ ctx[1]);
-    			add_location(ion_toggle, file$3, 157, 4, 5107);
+    			add_location(ion_toggle, file$3, 157, 4, 5102);
     			set_custom_element_data(ion_item2, "lines", "none");
-    			add_location(ion_item2, file$3, 155, 2, 5029);
+    			add_location(ion_item2, file$3, 155, 2, 5024);
     			set_custom_element_data(ion_label3, "position", "stacked");
-    			add_location(ion_label3, file$3, 162, 4, 5276);
+    			add_location(ion_label3, file$3, 162, 4, 5271);
     			set_custom_element_data(ion_range2, "min", "1");
     			set_custom_element_data(ion_range2, "max", "8");
     			set_custom_element_data(ion_range2, "pin", "");
     			set_custom_element_data(ion_range2, "mode", "ios");
     			set_custom_element_data(ion_range2, "disabled", ion_range2_disabled_value = !/*vibratoState*/ ctx[1]);
     			set_custom_element_data(ion_range2, "value", ion_range2_value_value = /*vibrato*/ ctx[0].frequency.value);
-    			add_location(ion_range2, file$3, 163, 4, 5328);
-    			add_location(ion_item3, file$3, 161, 2, 5260);
-    			add_location(ion_label4, file$3, 172, 4, 5602);
+    			add_location(ion_range2, file$3, 163, 4, 5323);
+    			add_location(ion_item3, file$3, 161, 2, 5255);
+    			add_location(ion_label4, file$3, 172, 4, 5597);
     			set_custom_element_data(ion_select_option0, "value", "off");
-    			add_location(ion_select_option0, file$3, 174, 6, 5747);
+    			add_location(ion_select_option0, file$3, 174, 6, 5740);
     			set_custom_element_data(ion_select_option1, "value", "The Barn");
-    			add_location(ion_select_option1, file$3, 175, 6, 5809);
+    			add_location(ion_select_option1, file$3, 175, 6, 5802);
     			set_custom_element_data(ion_select_option2, "value", "Cathedral (Large)");
-    			add_location(ion_select_option2, file$3, 176, 6, 5881);
+    			add_location(ion_select_option2, file$3, 176, 6, 5874);
     			set_custom_element_data(ion_select_option3, "value", "Cathedral (Small)");
-    			add_location(ion_select_option3, file$3, 177, 6, 5971);
+    			add_location(ion_select_option3, file$3, 177, 6, 5964);
     			set_custom_element_data(ion_select_option4, "value", "Spring");
-    			add_location(ion_select_option4, file$3, 178, 6, 6061);
-    			set_custom_element_data(ion_select, "value", /*currentBuffer*/ ctx[2]);
+    			add_location(ion_select_option4, file$3, 178, 6, 6054);
+    			set_custom_element_data(ion_select, "value", /*reverbValue*/ ctx[2]);
     			set_custom_element_data(ion_select, "interface", "popover");
-    			add_location(ion_select, file$3, 173, 4, 5637);
+    			add_location(ion_select, file$3, 173, 4, 5632);
     			set_custom_element_data(ion_item4, "lines", "none");
-    			add_location(ion_item4, file$3, 171, 2, 5573);
+    			add_location(ion_item4, file$3, 171, 2, 5568);
     			set_custom_element_data(ion_label5, "position", "stacked");
-    			add_location(ion_label5, file$3, 182, 4, 6188);
+    			add_location(ion_label5, file$3, 182, 4, 6181);
     			set_custom_element_data(ion_range3, "mode", "ios");
-    			set_custom_element_data(ion_range3, "disabled", /*reverbState*/ ctx[4]);
-    			set_custom_element_data(ion_range3, "value", ion_range3_value_value = Math.floor(/*reverb*/ ctx[7].wet.value * 100));
-    			add_location(ion_range3, file$3, 183, 4, 6243);
+    			set_custom_element_data(ion_range3, "disabled", /*reverbState*/ ctx[3]);
+    			set_custom_element_data(ion_range3, "value", ion_range3_value_value = Math.floor(/*reverb*/ ctx[6].wet.value * 100));
+    			add_location(ion_range3, file$3, 183, 4, 6236);
     			set_custom_element_data(ion_item5, "lines", "none");
-    			add_location(ion_item5, file$3, 181, 2, 6159);
+    			add_location(ion_item5, file$3, 181, 2, 6152);
     			set_custom_element_data(ion_card, "class", "svelte-1lmbwyc");
-    			add_location(ion_card, file$3, 133, 0, 4323);
+    			add_location(ion_card, file$3, 133, 0, 4318);
     		},
     		l: function claim(nodes) {
     			throw new Error("options.hydrate only works if the component was compiled with the `hydratable: true` option");
@@ -1829,12 +1745,12 @@ var app = (function () {
     				set_custom_element_data(ion_range2, "disabled", ion_range2_disabled_value);
     			}
 
-    			if (dirty & /*currentBuffer*/ 4) {
-    				set_custom_element_data(ion_select, "value", /*currentBuffer*/ ctx[2]);
+    			if (dirty & /*reverbValue*/ 4) {
+    				set_custom_element_data(ion_select, "value", /*reverbValue*/ ctx[2]);
     			}
 
-    			if (dirty & /*reverbState*/ 16) {
-    				set_custom_element_data(ion_range3, "disabled", /*reverbState*/ ctx[4]);
+    			if (dirty & /*reverbState*/ 8) {
+    				set_custom_element_data(ion_range3, "disabled", /*reverbState*/ ctx[3]);
     			}
     		},
     		i: noop,
@@ -1963,7 +1879,7 @@ var app = (function () {
     	let reverb = new Tone$1.Convolver("../reverb/The Barn.wav").toMaster();
 
     	let currentBuffer = "The Barn";
-    	let reverbValue = "The Barn";
+    	let reverbValue = "off";
     	vibrato.chain(reverb);
     	const writable_props = ["detune", "piano", "harpsichord"];
 
@@ -1975,13 +1891,13 @@ var app = (function () {
     	const ionChange_handler_1 = e => harpsichordVolume.rampTo(e.target.value / 900, 0.1);
     	const ionChange_handler_2 = e => $$invalidate(1, vibratoState = e.target.checked);
     	const ionChange_handler_3 = e => vibrato.frequency.rampTo(e.target.value);
-    	const ionChange_handler_4 = e => $$invalidate(3, reverbValue = e.target.value);
+    	const ionChange_handler_4 = e => $$invalidate(2, reverbValue = e.target.value);
     	const ionChange_handler_5 = e => reverb.wet.rampTo(e.target.value / 100);
 
     	$$self.$set = $$props => {
-    		if ("detune" in $$props) $$invalidate(8, detune = $$props.detune);
-    		if ("piano" in $$props) $$invalidate(9, piano = $$props.piano);
-    		if ("harpsichord" in $$props) $$invalidate(10, harpsichord = $$props.harpsichord);
+    		if ("detune" in $$props) $$invalidate(7, detune = $$props.detune);
+    		if ("piano" in $$props) $$invalidate(8, piano = $$props.piano);
+    		if ("harpsichord" in $$props) $$invalidate(9, harpsichord = $$props.harpsichord);
     	};
 
     	$$self.$capture_state = () => {
@@ -2005,21 +1921,21 @@ var app = (function () {
     	};
 
     	$$self.$inject_state = $$props => {
-    		if ("detune" in $$props) $$invalidate(8, detune = $$props.detune);
+    		if ("detune" in $$props) $$invalidate(7, detune = $$props.detune);
     		if ("normalizeUpper" in $$props) normalizeUpper = $$props.normalizeUpper;
     		if ("scaleUpper" in $$props) scaleUpper = $$props.scaleUpper;
     		if ("normalizeLower" in $$props) normalizeLower = $$props.normalizeLower;
     		if ("scaleLower" in $$props) scaleLower = $$props.scaleLower;
     		if ("add" in $$props) add = $$props.add;
-    		if ("piano" in $$props) $$invalidate(9, piano = $$props.piano);
-    		if ("harpsichord" in $$props) $$invalidate(10, harpsichord = $$props.harpsichord);
-    		if ("pianoVolume" in $$props) $$invalidate(5, pianoVolume = $$props.pianoVolume);
-    		if ("harpsichordVolume" in $$props) $$invalidate(6, harpsichordVolume = $$props.harpsichordVolume);
+    		if ("piano" in $$props) $$invalidate(8, piano = $$props.piano);
+    		if ("harpsichord" in $$props) $$invalidate(9, harpsichord = $$props.harpsichord);
+    		if ("pianoVolume" in $$props) $$invalidate(4, pianoVolume = $$props.pianoVolume);
+    		if ("harpsichordVolume" in $$props) $$invalidate(5, harpsichordVolume = $$props.harpsichordVolume);
     		if ("vibratoState" in $$props) $$invalidate(1, vibratoState = $$props.vibratoState);
-    		if ("reverb" in $$props) $$invalidate(7, reverb = $$props.reverb);
-    		if ("currentBuffer" in $$props) $$invalidate(2, currentBuffer = $$props.currentBuffer);
-    		if ("reverbValue" in $$props) $$invalidate(3, reverbValue = $$props.reverbValue);
-    		if ("reverbState" in $$props) $$invalidate(4, reverbState = $$props.reverbState);
+    		if ("reverb" in $$props) $$invalidate(6, reverb = $$props.reverb);
+    		if ("currentBuffer" in $$props) $$invalidate(12, currentBuffer = $$props.currentBuffer);
+    		if ("reverbValue" in $$props) $$invalidate(2, reverbValue = $$props.reverbValue);
+    		if ("reverbState" in $$props) $$invalidate(3, reverbState = $$props.reverbState);
     	};
 
     	let reverbState;
@@ -2031,16 +1947,16 @@ var app = (function () {
     			}
     		}
 
-    		if ($$self.$$.dirty & /*reverbValue*/ 8) {
-    			 $$invalidate(4, reverbState = reverbValue === "off" ? true : false);
+    		if ($$self.$$.dirty & /*reverbValue*/ 4) {
+    			 $$invalidate(3, reverbState = reverbValue === "off" ? true : false);
     		}
 
-    		if ($$self.$$.dirty & /*reverbValue, currentBuffer, Tone*/ 12) {
+    		if ($$self.$$.dirty & /*reverbValue, currentBuffer, Tone*/ 4100) {
     			 {
     				if (reverbValue !== "off" && currentBuffer !== reverbValue) {
     					vibrato.disconnect().chain(reverb, Tone$1.Master);
     					reverb.load(`../reverb/${reverbValue}.wav`);
-    					$$invalidate(2, currentBuffer = reverbValue);
+    					$$invalidate(12, currentBuffer = reverbValue);
     				} else if (reverbValue === "off") {
     					vibrato.disconnect().toMaster();
     					reverb.disconnect();
@@ -2054,7 +1970,6 @@ var app = (function () {
     	return [
     		vibrato,
     		vibratoState,
-    		currentBuffer,
     		reverbValue,
     		reverbState,
     		pianoVolume,
@@ -2065,6 +1980,7 @@ var app = (function () {
     		harpsichord,
     		playNote,
     		stopNote,
+    		currentBuffer,
     		normalizeUpper,
     		scaleUpper,
     		normalizeLower,
@@ -2084,11 +2000,11 @@ var app = (function () {
     		super(options);
 
     		init(this, options, instance$3, create_fragment$3, safe_not_equal, {
-    			detune: 8,
-    			piano: 9,
-    			harpsichord: 10,
-    			playNote: 11,
-    			stopNote: 12,
+    			detune: 7,
+    			piano: 8,
+    			harpsichord: 9,
+    			playNote: 10,
+    			stopNote: 11,
     			vibrato: 0
     		});
 
@@ -2125,7 +2041,7 @@ var app = (function () {
     	}
 
     	get playNote() {
-    		return this.$$.ctx[11];
+    		return this.$$.ctx[10];
     	}
 
     	set playNote(value) {
@@ -2133,7 +2049,7 @@ var app = (function () {
     	}
 
     	get stopNote() {
-    		return this.$$.ctx[12];
+    		return this.$$.ctx[11];
     	}
 
     	set stopNote(value) {

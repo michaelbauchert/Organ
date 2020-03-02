@@ -113,7 +113,7 @@
   let reverb = new Tone.Convolver ( "../reverb/The Barn.wav").toMaster();
   let currentBuffer = "The Barn";
 
-  let reverbValue = "The Barn";
+  let reverbValue = "off";
   $: reverbState = (reverbValue === "off") ? true : false;
   $: {
     if(reverbValue !== "off" && currentBuffer !== reverbValue) {
@@ -171,7 +171,7 @@
   <!--Reverb Section-->
   <ion-item lines="none">
     <ion-label>Reverb</ion-label>
-    <ion-select value={currentBuffer} interface="popover" on:ionChange={e=> reverbValue = e.target.value}>
+    <ion-select value={reverbValue} interface="popover" on:ionChange={e=> reverbValue = e.target.value}>
       <ion-select-option value="off">Off</ion-select-option>
       <ion-select-option value="The Barn">The Barn</ion-select-option>
       <ion-select-option value="Cathedral (Large)">Cathedral (Large)</ion-select-option>

@@ -43,7 +43,8 @@
 		text-align: center;
 		padding-top: calc(5vmin * var(--mod));
 		position: relative;
-		box-shadow: inset 0px -10px 6px 3px rgba(0,0,0,0.30);
+		box-shadow: inset 0px -10px 6px 3px rgba(0,0,0,0.30),
+								inset 5px 3px 10px rgba(255,255,255,0.5);
 		z-index: 2;
 		transition: all 0.07s;
 	}

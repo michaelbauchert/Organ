@@ -66,19 +66,19 @@
   };
 
   export let piano = new Tone.Sampler({
-    "C1": "../piano/C0-poff.wav",
-    "C3": "../piano/C2-poff.wav",
-    "C4": "../piano/C3-poff.wav",
-    "C5": "../piano/C4-poff.wav",
-    "C6": "../piano/C5-poff.wav",
+    "C1": "../piano/C0-poff.mp3",
+    "C3": "../piano/C2-poff.mp3",
+    "C4": "../piano/C3-poff.mp3",
+    "C5": "../piano/C4-poff.mp3",
+    "C6": "../piano/C5-poff.mp3",
   });
 
   export let harpsichord = new Tone.Sampler({
-    "B1": "../harpsichord/13-C1.wav",
-    "B2": "../harpsichord/25-C2.wav",
-    "B3": "../harpsichord/37-C3.wav",
-    "B4": "../harpsichord/49-C4.wav",
-    "B5": "../harpsichord/61-C5.wav",
+    "B1": "../harpsichord/13-C1.mp3",
+    "B2": "../harpsichord/25-C2.mp3",
+    "B3": "../harpsichord/37-C3.mp3",
+    "B4": "../harpsichord/49-C4.mp3",
+    "B5": "../harpsichord/61-C5.mp3",
   });
 
   let pianoVolume = new Tone.Signal(0).chain(piano.volume);
